@@ -1,0 +1,8 @@
+name: on-your-data-with-streamlit
+metadata:
+  template: on-your-data-with-streamlit@0.0.1-beta
+services:
+  web:
+    project: ./src
+    language: py
+    host: appservice
