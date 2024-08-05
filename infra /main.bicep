@@ -8,7 +8,9 @@ param environmentName string
 @description('Primary location for all resources')
 param location string
 
-var tags = { 'azd-env-name': name }
+var tags = { 'azd-env-name': environmentName }
+
+var abbrs = loadJsonContent('./abbreviations.json')
 
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: '${abbrs.resourcesResourceGroups}${environmentName}'
