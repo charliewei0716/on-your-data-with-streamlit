@@ -19,3 +19,13 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   location: location
   tags: tags
 }
+
+module resources 'resources.bicep' = {
+  name: 'resources'
+  scope: resourceGroup
+  params: {
+    location: location
+    resourceToken: resourceToken
+    tags: tags
+  }
+}
