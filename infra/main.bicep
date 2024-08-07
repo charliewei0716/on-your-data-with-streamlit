@@ -8,6 +8,8 @@ param environmentName string
 @description('Primary location for all resources')
 param location string
 
+param principalId string
+
 var tags = { 'azd-env-name': environmentName }
 
 var resourceToken = toLower(uniqueString(subscription().id, environmentName, location))
@@ -27,5 +29,8 @@ module resources 'resources.bicep' = {
     location: location
     resourceToken: resourceToken
     tags: tags
+    principalId: principalId
   }
 }
+
+output AZURE_OPENAI_ENDPOINT string = resources.outputs.AZURE_OPENAI_ENDPOINT
