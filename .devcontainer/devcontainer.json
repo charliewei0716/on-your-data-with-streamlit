@@ -11,8 +11,6 @@
 	"forwardPorts": [
 		8501
 	],
-	"postCreateCommand": "pip3 install -r requirements.txt",
-	"postAttachCommand": "streamlit run app.py",
 	"portsAttributes": {
 		"8501": {
 			"label": "Application",

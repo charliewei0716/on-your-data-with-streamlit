@@ -6,10 +6,3 @@ metadata:
 #     project: .
 #     language: py
 #     host: appservice
-hooks:
-  postprovision:
-    posix:
-      shell: sh
-      run: ./scripts/prepdocs.sh
-      interactive: true
-      continueOnError: false
