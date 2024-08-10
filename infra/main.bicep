@@ -26,6 +26,7 @@ module resources 'resources.bicep' = {
   name: 'resources'
   scope: resourceGroup
   params: {
+    resourceGroupName: resourceGroup.name
     location: location
     resourceToken: resourceToken
     tags: tags
@@ -34,3 +35,4 @@ module resources 'resources.bicep' = {
 }
 
 output AZURE_OPENAI_ENDPOINT string = resources.outputs.AZURE_OPENAI_ENDPOINT
+output AZURE_SEARCH_ENDPOINT string = resources.outputs.AZURE_SEARCH_ENDPOINT

@@ -1,4 +1,4 @@
-// param resourceGroupName string
+param resourceGroupName string
 param location string
 
 @minLength(3)
@@ -81,7 +81,7 @@ resource embedding 'Microsoft.CognitiveServices/accounts/deployments@2024-04-01-
 
 resource azureAISearch 'Microsoft.Search/searchServices@2024-03-01-preview' = {
   name: '${abbrs.searchSearchServices}${resourceToken}'
-  location: resourceGroup().location
+  location: location
   sku: {
     name: 'basic'
   }
@@ -171,76 +171,77 @@ resource roleAssignmentStorageBlobContributor 'Microsoft.Authorization/roleAssig
   }
 }
 
-// resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-//   name: 'script-${resourceToken}'
-//   location: resourceGroup().location
-//   kind: 'AzurePowerShell'
-//   identity: {
-//     type: 'UserAssigned'
-//     userAssignedIdentities: {
-//       '${userAssignedIdentity.id}': {}
-//     }
-//   }
-//   properties: {
-//     azPowerShellVersion: '3.0'
-//     arguments: '-resourceGroupName ${resourceGroupName} -uniqueNameComponent ${uniqueNameComponent} -storageAccountId ${storageAccount.id} -aoaiKey ${azureOpenAI.listKeys().key1}'
-//     scriptContent: '''
-//       param (
-//         [string]$resourceGroupName,
-//         [string]$uniqueNameComponent,
-//         [string]$storageAccountId,
-//         [string]$aoaiKey
-//       )
+resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
+  name: 'script-${resourceToken}'
+  location: resourceGroup().location
+  kind: 'AzurePowerShell'
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${userAssignedIdentity.id}': {}
+    }
+  }
+  properties: {
+    azPowerShellVersion: '3.0'
+    arguments: '-resourceGroupName ${resourceGroupName} -storageAccountName ${storageAccount.name} -storageAccountId ${storageAccount.id} -azureOpenAIName ${azureOpenAI.name} -aoaiKey ${azureOpenAI.listKeys().key1} -azureAISearchName ${azureAISearch.name}'
+    scriptContent: '''
+      param (
+        [string]$resourceGroupName,
+        [string]$storageAccountName,
+        [string]$storageAccountId,
+        [string]$azureOpenAIName,
+        [string]$aoaiKey,
+        [string]$azureAISearchName
+      )
       
-//       Set-Content -Path data.txt -Value '7月24日 颱風天'
-//       $storageAccountName = $uniqueNameComponent + 'storage'
-//       $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
-//       Set-AzStorageBlobContent -File 'data.txt' -Container 'data' -Blob 'data.txt' -Context $storageAccount.Context
-//       $uri = "https://${uniqueNameComponent}-aoai.openai.azure.com/openai/ingestion/jobs/data?api-version=2024-05-01-preview"
-//       $headers = @{'api-key' = $aoaiKey}
-//       $body = @{
-//         kind = "SystemCompute"
-//         searchServiceConnection = @{
-//           kind = "EndpointWithManagedIdentity"
-//           endpoint = "https://${uniqueNameComponent}-search.search.windows.net"
-//         }
-//         datasource = @{
-//           kind = "Storage"
-//           containerName = "data"
-//           chunkingSettings = @{
-//             maxChunkSizeInTokens = 1024
-//           }
-//           storageAccountConnection = @{
-//             kind = "EndpointWithManagedIdentity"
-//             endpoint = "https://${uniqueNameComponent}storage.blob.core.windows.net/"
-//             resourceId = "ResourceId=${storageAccountId}"
-//           }
-//           embeddingsSettings = @(
-//             @{
-//               embeddingResourceConnection = @{
-//                 kind = "RelativeConnection"
-//               }
-//               modelProvider = "AOAI"
-//               deploymentName = "text-embedding-ada-002"
-//             }
-//           )
-//         }
-//         dataRefreshIntervalInHours = 24
-//         completionAction = "keepAllAssets"
-//       } | ConvertTo-Json -Depth 5
+      Set-Content -Path data.txt -Value '7月24日 颱風天'
+      $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
+      Set-AzStorageBlobContent -File 'data.txt' -Container 'data' -Blob 'data.txt' -Context $storageAccount.Context
+      $uri = "https://${azureOpenAIName}.openai.azure.com/openai/ingestion/jobs/data?api-version=2024-05-01-preview"
+      $headers = @{'api-key' = $aoaiKey}
+      $body = @{
+        kind = "SystemCompute"
+        searchServiceConnection = @{
+          kind = "EndpointWithManagedIdentity"
+          endpoint = "https://${azureAISearchName}.search.windows.net"
+        }
+        datasource = @{
+          kind = "Storage"
+          containerName = "data"
+          chunkingSettings = @{
+            maxChunkSizeInTokens = 1024
+          }
+          storageAccountConnection = @{
+            kind = "EndpointWithManagedIdentity"
+            endpoint = "https://${storageAccountName}.blob.core.windows.net/"
+            resourceId = "ResourceId=${storageAccountId}"
+          }
+          embeddingsSettings = @(
+            @{
+              embeddingResourceConnection = @{
+                kind = "RelativeConnection"
+              }
+              modelProvider = "AOAI"
+              deploymentName = "text-embedding-ada-002"
+            }
+          )
+        }
+        dataRefreshIntervalInHours = 24
+        completionAction = "keepAllAssets"
+      } | ConvertTo-Json -Depth 5
        
-//       Invoke-RestMethod -Uri $uri -Headers $headers -Method Put -Body $body -ContentType 'application/json'
-//     '''
-//     retentionInterval: 'PT1H'
-//   }
-//   dependsOn: [
-//     searchIndexDataReader
-//     searchServiceContributor
-//     storageBlobDataContributor
-//     cognitiveServicesOpenAIContributor
-//     storageBlobDataReader
-//   ]
-// }
+      Invoke-RestMethod -Uri $uri -Headers $headers -Method Put -Body $body -ContentType 'application/json'
+    '''
+    retentionInterval: 'PT1H'
+  }
+  dependsOn: [
+    searchIndexDataReader
+    searchServiceContributor
+    storageBlobDataContributor
+    cognitiveServicesOpenAIContributor
+    storageBlobDataReader
+  ]
+}
 
 resource cognitiveServicesOpenAIUser 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
   scope: azureOpenAI
@@ -253,4 +254,4 @@ resource cognitiveServicesOpenAIUser 'Microsoft.Authorization/roleAssignments@20
 }
 
 output AZURE_OPENAI_ENDPOINT string = 'https://${azureOpenAI.name}.openai.azure.com/'
-
+output AZURE_SEARCH_ENDPOINT string = 'https://${azureAISearch.name}.search.windows.net'
