@@ -34,5 +34,6 @@
 				"ms-azuretools.vscode-bicep"
 			]
 		}
-	}
+	},
+	"remoteUser": "vscode"
 }
