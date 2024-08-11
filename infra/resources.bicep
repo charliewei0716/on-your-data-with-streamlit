@@ -44,40 +44,35 @@ resource azureOpenAI 'Microsoft.CognitiveServices/accounts@2024-04-01-preview' =
   }
 }
 
-resource gpt4o 'Microsoft.CognitiveServices/accounts/deployments@2024-04-01-preview' = {  
-  name: 'gpt-4o'
+var deployments = [
+  {
+    name: 'gpt-4o'
+    skuName: 'GlobalStandard'
+    modelVersion: '2024-05-13'
+  }
+  {
+    name: 'text-embedding-ada-002'
+    skuName: 'Standard'
+    modelVersion: '2'
+  }
+]
+
+@batchSize(1)
+resource azureOpenAIModel 'Microsoft.CognitiveServices/accounts/deployments@2024-04-01-preview' = [for deployment in deployments: {  
+  name: deployment.name
   parent: azureOpenAI
   sku: {
-    name: 'GlobalStandard'
+    name: deployment.skuName
     capacity: 100
   }
   properties: {
     model: {
-      format:'OpenAI'
-      name:'gpt-4o'
-      version:'2024-05-13'
+      format: 'OpenAI'
+      name: deployment.name
+      version: deployment.modelVersion
     }
   }  
-}
-
-resource embedding 'Microsoft.CognitiveServices/accounts/deployments@2024-04-01-preview' =  {  
-  name: 'text-embedding-ada-002'  
-  parent: azureOpenAI  
-  sku: {
-    name: 'Standard'
-    capacity: 100
-  }
-  properties: {
-    model: {
-      format:'OpenAI'
-      name:'text-embedding-ada-002'
-      version: '2'
-    }
-  }
-  dependsOn:[
-    gpt4o
-  ]
-}
+}]
 
 resource azureAISearch 'Microsoft.Search/searchServices@2024-03-01-preview' = {
   name: '${abbrs.searchSearchServices}${resourceToken}'
@@ -243,13 +238,62 @@ resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
   ]
 }
 
-resource cognitiveServicesOpenAIUser 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+resource appServicePlan 'Microsoft.Web/serverfarms@2022-09-01' = {
+  name: '${abbrs.webServerFarms}${resourceToken}'
+  location: location
+  properties: {
+    reserved: true
+  }
+  sku: {
+    name: 'B1'
+  }
+  kind: 'linux'
+}
+
+resource appService 'Microsoft.Web/sites@2022-03-01' = {
+  name: '${abbrs.webSitesAppService}${resourceToken}'
+  location: location
+  tags: union(tags, { 'azd-service-name': 'web' })
+  identity: {
+    type: 'SystemAssigned'
+  }
+  properties: {
+    serverFarmId: appServicePlan.id
+    httpsOnly: true
+    siteConfig: {
+      alwaysOn: true
+      linuxFxVersion: 'PYTHON|3.11'
+      appCommandLine: 'python -m streamlit run app.py --server.port 8000 --server.address 0.0.0.0 --server.runOnSave false'
+    }
+  }
+
+  resource appSettings 'config' = {
+    name: 'appsettings'
+    properties: {
+      SCM_DO_BUILD_DURING_DEPLOYMENT: 'true'
+      AZURE_OPENAI_ENDPOINT: 'https://${azureOpenAI.name}.openai.azure.com/'
+      AZURE_SEARCH_ENDPOINT: 'https://${azureAISearch.name}.search.windows.net'
+    }
+  }
+}
+
+resource cognitiveServicesOpenAIUserForUser 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
   scope: azureOpenAI
   name: guid(azureOpenAI.id, principalId, resourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'))
   properties: {
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd')
     principalId: principalId
     principalType: 'User'
+  }
+}
+
+resource cognitiveServicesOpenAIUserForAppService 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  scope: azureOpenAI
+  name: guid(azureOpenAI.id, appService.id, resourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'))
+  properties: {
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd')
+    principalId: appService.identity.principalId
+    principalType: 'ServicePrincipal'
   }
 }
 
