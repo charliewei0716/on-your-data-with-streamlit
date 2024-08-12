@@ -189,9 +189,9 @@ resource deploymentScript 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
         [string]$azureAISearchName
       )
       
-      Set-Content -Path data.txt -Value '7月24日 颱風天'
+      Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/charliewei0716/on-your-data-with-streamlit/main/data/employee_handbook.pdf' -OutFile 'employee_handbook.pdf'
       $storageAccount = Get-AzStorageAccount -ResourceGroupName $resourceGroupName -Name $storageAccountName
-      Set-AzStorageBlobContent -File 'data.txt' -Container 'data' -Blob 'data.txt' -Context $storageAccount.Context
+      Set-AzStorageBlobContent -File 'employee_handbook.pdf' -Container 'data' -Blob 'employee_handbook.pdf' -Context $storageAccount.Context
       $uri = "https://${azureOpenAIName}.openai.azure.com/openai/ingestion/jobs/data?api-version=2024-05-01-preview"
       $headers = @{'api-key' = $aoaiKey}
       $body = @{
