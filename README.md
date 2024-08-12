@@ -6,6 +6,8 @@ This repository leverages Azure OpenAI's native [On Your Data](https://learn.mic
 
 ![Deploy to Azure](https://aka.ms/deploytoazurebutton)
 
+![Chat](assets/chat.png)
+
 ## Features
 
 - [Optimal security architecture implementation](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/use-your-data-securely#data-ingestion-architecture) with Managed Identity and [RBAC Configuration](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/use-your-data-securely#role-assignments) in **On Your Data**.
@@ -33,6 +35,9 @@ This repository leverages Azure OpenAI's native [On Your Data](https://learn.mic
     ```
     - Enter the environment name, Azure Subscription, and the location of the Azure resources one by one as instructed.
     - This process involves uploading the test document `./data/employee_handbook.pdf` to an Azure Storage Account and triggering the **Ingestion Jobs** task within **On Your Data**.
+   
+   ![Deploy](assets/deploy.png)
+
 5. Setting Up a Python development environment and running web application:
     ```
     cd app
