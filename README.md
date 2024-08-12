@@ -20,8 +20,27 @@ This repository leverages Azure OpenAI's native [On Your Data](https://learn.mic
 
 ## Getting Started
 
-This repository has been optimized for GitHub codespaces. You can use the following badge to open a web-based version of VS Code in your browser.
+1. This repository has been optimized for GitHub codespaces. Please use the following badge to open a web-based version of VS Code in your browser.
 
-[![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=blue&logo=github)](https://codespaces.new/charliewei0716/on-your-data-with-streamlit?quickstart=1)
-
-## Deploying
+   [![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=blue&logo=github)](https://codespaces.new/charliewei0716/on-your-data-with-streamlit?quickstart=1)
+3. Login to your Azure account:
+    ```
+    azd auth login --use-device-code
+    ```
+4. Provision Azure resources and deploy the application code:
+    ```
+    azd up
+    ```
+    - Enter the environment name, Azure Subscription, and the location of the Azure resources one by one as instructed.
+    - This process involves uploading the test document `./data/employee_handbook.pdf` to an Azure Storage Account and triggering the **Ingestion Jobs** task within **On Your Data**.
+5. Setting Up a Python development environment and running web application:
+    ```
+    cd app
+    . start.sh
+    ```
+    If you are in GitHub codespaces, you will see the automatically opened preview browser on the right-hand side.
+6. Redeploy the updated program:
+   ```
+   azd deploy
+   ```
+   Repeat steps 5 and 6 and enjoy your development process!
