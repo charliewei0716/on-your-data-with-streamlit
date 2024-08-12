@@ -16,6 +16,8 @@ This repository leverages Azure OpenAI's native [On Your Data](https://learn.mic
 
 ### Architecture Diagram
 
+![Architecture](assets/architecture.png)
+
 ## Getting Started
 
 This repository has been optimized for GitHub codespaces. You can use the following badge to open a web-based version of VS Code in your browser.
