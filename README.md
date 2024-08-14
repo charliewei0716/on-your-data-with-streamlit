@@ -1,12 +1,14 @@
-# Azure OpenAI On Your Data with Python Streamlit
+<div align="center">
 
-This repository leverages Azure OpenAI's native [On Your Data](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/use-your-data) feature and integrates it with [Streamlit](https://streamlit.io/), a robust framework for developing web applications purely in Python. The goal is to create an MVP for RAG with the most streamlined architecture possible.
+# Azure OpenAI On Your Data with Python Streamlit
 
 [![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=blue&logo=github)](https://codespaces.new/charliewei0716/on-your-data-with-streamlit?quickstart=1)
 
-![Deploy to Azure](https://aka.ms/deploytoazurebutton)
+This repository leverages Azure OpenAI's native [On Your Data](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/use-your-data) feature and integrates it with [Streamlit](https://streamlit.io/), a robust framework for developing web applications purely in Python. The goal is to create an MVP for RAG with the most streamlined architecture possible.
 
-![Chat](assets/chat.png)
+<img src="./assets/chat.png" alt="Chat" width="640px" />
+
+</div>
 
 ## Features
 
@@ -18,7 +20,9 @@ This repository leverages Azure OpenAI's native [On Your Data](https://learn.mic
 
 ### Architecture Diagram
 
-![Architecture](assets/architecture.png)
+<div align="center">
+  <img src="./assets/architecture.png" alt="architecture" width="800px" />
+</div>
 
 ## Getting Started
 
