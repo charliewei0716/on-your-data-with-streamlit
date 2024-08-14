@@ -53,3 +53,12 @@ This repository leverages Azure OpenAI's native [On Your Data](https://learn.mic
    azd deploy
    ```
    Repeat steps 5 and 6 and enjoy your development process!
+
+## Resources
+
+Here are some resources to learn more about the technologies used in this repository:
+
+- [Azure OpenAI On Your Data](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/use-your-data)
+- [Quickstart: Chat with Azure OpenAI models using your own data](https://learn.microsoft.com/en-us/azure/ai-services/openai/use-your-data-quickstart?tabs=command-line%2Cpython-new&pivots=programming-language-python)
+- [Securely use Azure OpenAI On Your Data](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/use-your-data-securely)
+- [Build a basic LLM chat app](https://docs.streamlit.io/develop/tutorials/llms/build-conversational-apps)
