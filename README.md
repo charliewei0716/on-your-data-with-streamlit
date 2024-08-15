@@ -29,11 +29,11 @@ This repository leverages Azure OpenAI's native [On Your Data](https://learn.mic
 1. This repository has been optimized for GitHub codespaces. Please use the following badge to open a web-based version of VS Code in your browser.
 
    [![Open in GitHub Codespaces](https://img.shields.io/static/v1?style=for-the-badge&label=GitHub+Codespaces&message=Open&color=blue&logo=github)](https://codespaces.new/charliewei0716/on-your-data-with-streamlit?quickstart=1)
-3. Login to your Azure account:
+2. Login to your Azure account:
     ```
     azd auth login --use-device-code
     ```
-4. Provision Azure resources and deploy the application code:
+3. Provision Azure resources and deploy the application code:
     ```
     azd up
     ```
@@ -42,17 +42,17 @@ This repository leverages Azure OpenAI's native [On Your Data](https://learn.mic
    
    ![Deploy](assets/deploy.png)
 
-5. Setting Up a Python development environment and running web application:
+4. Setting Up a Python development environment and running web application:
     ```
     cd app
     . start.sh
     ```
     If you are in GitHub codespaces, you will see the automatically opened preview browser on the right-hand side.
-6. Redeploy the updated program:
+5. Redeploy the updated program:
    ```
    azd deploy
    ```
-   Repeat steps 5 and 6 and enjoy your development process!
+   Repeat steps 4 and 5 and enjoy your development process!
 
 ## Resources
 
