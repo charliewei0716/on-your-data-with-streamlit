@@ -6,7 +6,8 @@
 
 This repository leverages Azure OpenAI's native [On Your Data](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/use-your-data) feature and integrates it with [Streamlit](https://streamlit.io/), a robust framework for developing web applications purely in Python. The goal is to create an MVP for RAG with the most streamlined architecture possible.
 
-This template has been successfully included in the azd-templates Gallery [aka.ms/awesome-azd](https://aka.ms/awesome-azd). Thanks to the Microsoft azd team. :heart:
+This template has now been successfully included in the azd-templates Gallery [aka.ms/awesome-azd](https://aka.ms/awesome-azd).  
+Thanks to the Microsoft azd team. :heart:
 
 <img src="./assets/chat.png" alt="Chat" width="640px" />
 
